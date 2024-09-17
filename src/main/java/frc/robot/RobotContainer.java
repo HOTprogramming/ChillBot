@@ -11,11 +11,15 @@ import frc.robot.Drivetrain.Drive;
 import frc.robot.Drivetrain.DriveIO;
 import frc.robot.Drivetrain.DriveKraken;
 import frc.robot.Drivetrain.DriveSim;
+import frc.robot.subsystems.Arm.ArmIOKraken;
+import frc.robot.subsystems.Arm.ArmSubsystem;
 
 public class RobotContainer {
   public Drive drivetrain;
+  private ArmSubsystem m_armSubsystem;
 
   private final CommandXboxController driver = new CommandXboxController(0);
+  private final CommandXboxController operator = new CommandXboxController(1);
 
   public RobotContainer() {
     switch (Constants.getRobot()) {
@@ -23,6 +27,8 @@ public class RobotContainer {
         DriveKraken krakenIO = new DriveKraken();
 
         this.drivetrain = new Drive(krakenIO);
+
+        m_armSubsystem = new ArmSubsystem((new ArmIOKraken()));
       }
       case DEVBOT -> {}
       case SIMBOT -> {
@@ -47,6 +53,10 @@ public class RobotContainer {
               Math.abs(driver.getRightX()) >= 0.15 ? -driver.getRightX() : 0);
           }
       ));
+
+      operator.b().whileTrue(m_armSubsystem.protectCommand());
+      operator.y().whileTrue(m_armSubsystem.batterCommand());
+      operator.a().whileTrue(m_armSubsystem.zeroCommand());
   }
 
   public Command getAutonomousCommand() {
