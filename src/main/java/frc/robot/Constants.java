@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.RobotBase;
 
 public class Constants {
+    public final static double loopPeriodSecs = 0.02;
     private static RobotType robotType = RobotType.COMPBOT;
 
     public enum RobotType {

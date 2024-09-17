@@ -16,9 +16,11 @@ import frc.robot.Constants;
 
 
 public class IntakeConstants {
-    public static final double targetRPMHigh = 4000; // any number from -6000 to 6000
-    public static final double targetRPMLow = 1800;
+    public static final double targetRPMHigh = 6000; // any number from -6000 to 6000
+    public static final double targetRPMLow = 6000;
     public static final double targetRPMEject = 1800;
+
+    // feeder kp of 2 kS of 3.5 current limits of 40 on everyhting
 
 
 
@@ -75,8 +77,8 @@ public class IntakeConstants {
             .withKI(0.0)
             .withKD(0.0)
             .withKS(0.0)
-            .withKS(8.6)
-            .withKV(0.0)
+            .withKS(11.2)
+            .withKV(0.0013)
             .withKA(0.0)
         );
 }

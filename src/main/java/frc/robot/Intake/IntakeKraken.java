@@ -4,6 +4,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -15,7 +16,9 @@ import edu.wpi.first.math.util.Units;
 
 public class IntakeKraken implements IntakeIO {
   // Hardware
-  private final TalonFX intakeTalon;
+  private final TalonFX intakeTalonInner;
+  private final TalonFX intakeTalonOuter;
+
 
   // Status Signals
   private final StatusSignal<Double> Position;
@@ -32,22 +35,25 @@ public class IntakeKraken implements IntakeIO {
   private final NeutralOut neutralControl = new NeutralOut().withUpdateFreqHz(0.0);
 
   public IntakeKraken() {
-    intakeTalon = new TalonFX(IntakeConstants.kInnerIntakeMotorID, IntakeConstants.CANBUS_NAME);
+    intakeTalonInner = new TalonFX(IntakeConstants.kInnerIntakeMotorID, IntakeConstants.CANBUS_NAME);
+    intakeTalonOuter = new TalonFX(IntakeConstants.kOuterIntakeMotorID, IntakeConstants.CANBUS_NAME);
 
 
     // Apply configs
-    intakeTalon.getConfigurator().apply(IntakeConstants.innerRollerConfig, 1.0);
+    intakeTalonInner.getConfigurator().apply(IntakeConstants.innerRollerConfig, 1.0);
+    intakeTalonOuter.getConfigurator().apply(IntakeConstants.outerRollerConfig, 1.0);
 
     // Set inverts
-    intakeTalon.setInverted(true);
+    intakeTalonInner.setInverted(false);
+    intakeTalonOuter.setInverted(true);
 
     // Set signals
-    Position = intakeTalon.getPosition();
-    Velocity = intakeTalon.getVelocity();
-    AppliedVolts = intakeTalon.getMotorVoltage();
-    SupplyCurrent = intakeTalon.getSupplyCurrent();
-    TorqueCurrent = intakeTalon.getTorqueCurrent();
-    TempCelsius = intakeTalon.getDeviceTemp();
+    Position = intakeTalonInner.getPosition();
+    Velocity = intakeTalonInner.getVelocity();
+    AppliedVolts = intakeTalonInner.getMotorVoltage();
+    SupplyCurrent = intakeTalonInner.getSupplyCurrent();
+    TorqueCurrent = intakeTalonInner.getTorqueCurrent();
+    TempCelsius = intakeTalonInner.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         100.0,
@@ -82,21 +88,25 @@ public class IntakeKraken implements IntakeIO {
 
   @Override
   public void runVolts(double Volts) {
-    intakeTalon.setControl(voltageControl.withOutput(Volts));
+    intakeTalonInner.setControl(voltageControl.withOutput(Volts));
   }
 
   @Override
   public void stop() {
-    intakeTalon.setControl(neutralControl);
+    intakeTalonInner.setControl(neutralControl);
+    intakeTalonOuter.setControl(neutralControl);
   }
 
   @Override
-  public void runVelocity(double Rpm, double Feedforward) {
+  public void runVelocity(double Rpm, double outerRpm, double Feedforward) {
     if (Rpm != 0) {
-      intakeTalon.setControl(
+      intakeTalonInner.setControl(
+        velocityControl.withVelocity(Rpm / 60.0));
+      intakeTalonOuter.setControl(
         velocityControl.withVelocity(Rpm / 60.0));
     } else {
-      intakeTalon.setControl(neutralControl); // because TorqueFOC tuning doesnt like a 0 command
+      intakeTalonInner.setControl(neutralControl); // because TorqueFOC tuning doesnt like a 0 command
+      intakeTalonOuter.setControl(neutralControl);
     }
     
   }
@@ -109,7 +119,7 @@ public class IntakeKraken implements IntakeIO {
    * kv ks and kp are the only values needed to get a good tune on any motor to attain a velocity
    */
   public void setPID(double kP, double kV, double kS) {
-    intakeTalon.getConfigurator().apply(new Slot0Configs()
+    intakeTalonInner.getConfigurator().apply(new Slot0Configs()
       .withKP(kP)
       .withKV(kV)
       .withKS(kS));
@@ -117,7 +127,7 @@ public class IntakeKraken implements IntakeIO {
 
   @Override
   public void runCharacterization(double input) {
-    intakeTalon.setControl(voltageControl.withOutput(input));
+    intakeTalonInner.setControl(voltageControl.withOutput(input));
   }
 
 }

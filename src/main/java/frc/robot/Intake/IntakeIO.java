@@ -24,7 +24,7 @@ default void runVolts(double Volts) {}
 default void stop() {}
 
 /** Run motor at velocity in rpm */
-default void runVelocity(double Rpm, double Feedforward) {}
+default void runVelocity(double Rpm, double outerRpm, double Feedforward) {}
 
 /** Config PID values for motor */
 default void setPID(double kP, double kI, double kD) {}

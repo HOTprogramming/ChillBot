@@ -97,7 +97,7 @@ public class Intake extends SubsystemBase {
     
     //Detwrmine motor speed and process 
     double motorRPM = currentState.rpm;
-    io.runVelocity(motorRPM, 0.0); 
+    io.runVelocity(motorRPM, motorRPM, 0.0); 
 
     //go update the signal data 
     io.updateStats(stats);

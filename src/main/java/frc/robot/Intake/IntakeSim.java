@@ -47,7 +47,7 @@ public class IntakeSim implements IntakeIO {
     }
 
     @Override
-    public void runVelocity(double Rpm, double Feedforward) {
+    public void runVelocity(double Rpm, double RpmOuter, double Feedforward) {
         SetpointRpm = Rpm;
         this.Feedforward = Feedforward;
     }
