@@ -44,12 +44,14 @@ public class ArmSubsystem extends SubsystemBase {
   //lowest value is 0.984, highest value is 1.17
   private static final double ZERO_POS = 1.0;
   private static final double BATTER_POS = 1.05;
-  private static final double PROTECTED_POS = 1.1;
+  private static final double PROTECTED_POS = 1.0045;
+  private static final double AMP_POS = 1.181;
 
   public enum State {
     ZERO(ZERO_POS),
     BATTER(BATTER_POS),
-    PROTECTED(PROTECTED_POS);
+    PROTECTED(PROTECTED_POS),
+    AMP(AMP_POS);
 
     private final double armPos;
   
@@ -102,6 +104,10 @@ public class ArmSubsystem extends SubsystemBase {
 
   public Command batterCommand() {
     return runOnce(() -> {currentState = State.BATTER;});
+  }
+
+    public Command ampCommand() {
+    return runOnce(() -> {currentState = State.AMP;});
   }
 
   public boolean armExampleCondition() {

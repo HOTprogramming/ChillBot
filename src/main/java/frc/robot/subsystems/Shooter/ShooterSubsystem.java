@@ -42,11 +42,13 @@ public class ShooterSubsystem extends SubsystemBase {
   private static final double _SHOOT = 3500.0; 
   private static final double _IDLE = 1000.0;
   private static final double _OFF = 0.0; 
+  private static final double _AMP = 750.0; 
 
   public enum State {
     SHOOT(_SHOOT),
     IDLE(_IDLE),
-    OFF(_OFF);
+    OFF(_OFF),
+    AMP(_AMP);
 
     private final double rpm;
   
@@ -102,6 +104,10 @@ public class ShooterSubsystem extends SubsystemBase {
   
     return runOnce(() -> {currentState = State.OFF;});
   }
+    public Command ampCommand() {
+  
+    return runOnce(() -> {currentState = State.AMP;});
+  }
 
   public boolean exampleCondition() {
 
@@ -112,7 +118,7 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
 
     double motorRPM = currentState.rpm;
-    if(currentState == State.IDLE || currentState == State.SHOOT){
+    if(currentState == State.IDLE || currentState == State.SHOOT || currentState == State.AMP){
     io.runVelocity(motorRPM, 0.0); 
     }
     else{

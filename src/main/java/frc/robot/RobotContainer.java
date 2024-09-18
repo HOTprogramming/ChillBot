@@ -84,6 +84,7 @@ public class RobotContainer {
     operator.b().whileTrue(Commands.parallel(m_armSubsystem.protectCommand(), m_shooterSubsystem.shootCommand()));
     operator.y().whileTrue(Commands.parallel(m_armSubsystem.batterCommand(), m_shooterSubsystem.shootCommand()));
     operator.a().whileTrue(Commands.parallel(m_armSubsystem.zeroCommand(), m_shooterSubsystem.idleCommand()));
+    operator.leftBumper().whileTrue(Commands.parallel(m_armSubsystem.ampCommand(), m_shooterSubsystem.ampCommand()));
     operator.x().whileTrue(m_shooterSubsystem.setPID());
 
   }
