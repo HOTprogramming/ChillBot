@@ -22,14 +22,11 @@ import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Shooter.ShooterIOKraken;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
 
+
 public class RobotContainer {
   public Drive drivetrain;
   public Intake intake;
   public Feeder feeder;
-
-
-public class RobotContainer {
-  public Drive drivetrain;
   private ArmSubsystem m_armSubsystem;
   private ShooterSubsystem m_shooterSubsystem;
 
@@ -46,7 +43,6 @@ public class RobotContainer {
         this.drivetrain = new Drive(krakenDrive);
         this.intake = new Intake(intakeKraken);
         this.feeder = new Feeder(feederKraken);
-        this.drivetrain = new Drive(krakenIO);
 
         m_armSubsystem = new ArmSubsystem((new ArmIOKraken()));
         m_shooterSubsystem = new ShooterSubsystem((new ShooterIOKraken()));
