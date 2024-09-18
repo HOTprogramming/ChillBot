@@ -17,13 +17,24 @@ import frc.robot.Feeder.FeederSim;
 import frc.robot.Intake.Intake;
 import frc.robot.Intake.IntakeKraken;
 import frc.robot.Intake.IntakeSim;
+import frc.robot.subsystems.Arm.ArmIOKraken;
+import frc.robot.subsystems.Arm.ArmSubsystem;
+import frc.robot.subsystems.Shooter.ShooterIOKraken;
+import frc.robot.subsystems.Shooter.ShooterSubsystem;
 
 public class RobotContainer {
   public Drive drivetrain;
   public Intake intake;
   public Feeder feeder;
 
+
+public class RobotContainer {
+  public Drive drivetrain;
+  private ArmSubsystem m_armSubsystem;
+  private ShooterSubsystem m_shooterSubsystem;
+
   private final CommandXboxController driver = new CommandXboxController(0);
+  private final CommandXboxController operator = new CommandXboxController(1);
 
   public RobotContainer() {
     switch (Constants.getRobot()) {
@@ -35,6 +46,10 @@ public class RobotContainer {
         this.drivetrain = new Drive(krakenDrive);
         this.intake = new Intake(intakeKraken);
         this.feeder = new Feeder(feederKraken);
+        this.drivetrain = new Drive(krakenIO);
+
+        m_armSubsystem = new ArmSubsystem((new ArmIOKraken()));
+        m_shooterSubsystem = new ShooterSubsystem((new ShooterIOKraken()));
       }
       case DEVBOT -> {}
       case SIMBOT -> {
@@ -70,6 +85,10 @@ public class RobotContainer {
     driver.x().whileTrue(intake.idleCommand());
     
   
+    operator.b().whileTrue(Commands.parallel(m_armSubsystem.protectCommand(), m_shooterSubsystem.shootCommand()));
+    operator.y().whileTrue(Commands.parallel(m_armSubsystem.batterCommand(), m_shooterSubsystem.shootCommand()));
+    operator.a().whileTrue(Commands.parallel(m_armSubsystem.zeroCommand(), m_shooterSubsystem.idleCommand()));
+
   }
 
   public Command getAutonomousCommand() {
