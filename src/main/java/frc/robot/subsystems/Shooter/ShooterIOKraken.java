@@ -3,6 +3,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -15,6 +16,7 @@ import edu.wpi.first.math.util.Units;
 public class ShooterIOKraken  implements ShooterIO {
   // Hardware
   private final TalonFX shooter1;
+  private final TalonFX shooter2;
 
   // Status Signals
   private final StatusSignal<Double> Position;
@@ -32,7 +34,8 @@ public class ShooterIOKraken  implements ShooterIO {
   private final NeutralOut neutralControl = new NeutralOut().withUpdateFreqHz(0.0);
 
   public ShooterIOKraken() {
-    shooter1 = new TalonFX(ShooterConstants.kIntakeMotorID, "drivetrain");
+    shooter1 = new TalonFX(ShooterConstants.shooter1ID, "drivetrain");
+    shooter2 = new TalonFX(ShooterConstants.shooter2ID, "drivetrain");
       
 
     // General config
@@ -57,12 +60,17 @@ public class ShooterIOKraken  implements ShooterIO {
     controllerConfig.kV = ShooterConstants.gains.kV();
     controllerConfig.kA = ShooterConstants.gains.kA();
 
+    shooter2.setControl(new Follower(shooter1.getDeviceID(), true));
+
     // Apply configs
     shooter1.getConfigurator().apply(config, 1.0);
     shooter1.getConfigurator().apply(controllerConfig, 1.0);
+    shooter2.getConfigurator().apply(config, 1.0);
+    shooter2.getConfigurator().apply(controllerConfig, 1.0);
 
     // Set inverts
     shooter1.setInverted(true);
+
 
     // Set signals
     Position = shooter1.getPosition();
