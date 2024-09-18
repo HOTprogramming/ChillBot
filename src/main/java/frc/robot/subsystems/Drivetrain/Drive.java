@@ -1,4 +1,4 @@
-package frc.robot.Drivetrain;
+package frc.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Drivetrain.DriveIO.DriveIOdata;
+import frc.robot.subsystems.Drivetrain.DriveIO.DriveIOdata;
 
 public class Drive extends SubsystemBase {
     private DriveIO driveIO;
@@ -44,10 +44,6 @@ public class Drive extends SubsystemBase {
 
     public void init() {
         driveIO.setTeamRotation(DriverStation.getAlliance().get());
-    }
-
-    public void setGains() {
-        driveIO.setGains();
     }
 
     public void setTeamRotation() {

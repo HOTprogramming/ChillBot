@@ -1,7 +1,8 @@
-package frc.robot.Drivetrain;
+package frc.robot.subsystems.Drivetrain;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
@@ -15,8 +16,29 @@ import frc.robot.Constants;
 
 
 public class DriveConstants {
-    static CurrentLimitsConfigs DRIVE_CURRENT_LIMITS = new CurrentLimitsConfigs();
-    static CurrentLimitsConfigs AZIMUTH_CURRENT_LIMITS = new CurrentLimitsConfigs();
+    static CurrentLimitsConfigs DRIVE_CURRENT_LIMITS = new CurrentLimitsConfigs()
+        .withStatorCurrentLimit(90)
+        .withStatorCurrentLimitEnable(true)
+        .withSupplyCurrentLimit(100)
+        .withSupplyCurrentLimitEnable(true)
+        .withSupplyCurrentThreshold(100)
+        .withSupplyTimeThreshold(0.0);
+
+    static CurrentLimitsConfigs AZIMUTH_CURRENT_LIMITS = new CurrentLimitsConfigs()
+        .withStatorCurrentLimit(50)
+        .withStatorCurrentLimitEnable(true)
+        .withSupplyCurrentLimit(40)
+        .withSupplyCurrentLimitEnable(true)
+        .withSupplyCurrentThreshold(40)
+        .withSupplyTimeThreshold(0.0);
+
+    static TorqueCurrentConfigs DRIVE_TORQUE_CONFIGS = new TorqueCurrentConfigs()
+        .withPeakForwardTorqueCurrent(90)
+        .withPeakReverseTorqueCurrent(-90);
+
+    static TorqueCurrentConfigs AZIMUTH_TORQUE_CONFIGS = new TorqueCurrentConfigs()
+        .withPeakForwardTorqueCurrent(50)
+        .withPeakReverseTorqueCurrent(-50);
 
     static double ROBOT_LENGTH_INCHES = 20.25;
     static double ROBOT_WITDTH_INCHES = 20.25;

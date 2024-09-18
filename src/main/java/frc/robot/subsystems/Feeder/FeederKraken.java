@@ -1,4 +1,4 @@
-package frc.robot.Intake;
+package frc.robot.subsystems.Feeder;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -13,11 +13,14 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DigitalInput;
 
-public class IntakeKraken implements IntakeIO {
+public class FeederKraken implements FeederIO {
   // Hardware
-  private final TalonFX intakeTalonInner;
-  private final TalonFX intakeTalonOuter;
+  private final TalonFX feederTalon;
+  private final DigitalInput feederBeamBreak;
+  private boolean hasRing;
+
 
 
   // Status Signals
@@ -34,26 +37,23 @@ public class IntakeKraken implements IntakeIO {
   private final VelocityTorqueCurrentFOC velocityControl = new VelocityTorqueCurrentFOC(0).withUpdateFreqHz(0.0);
   private final NeutralOut neutralControl = new NeutralOut().withUpdateFreqHz(0.0);
 
-  public IntakeKraken() {
-    intakeTalonInner = new TalonFX(IntakeConstants.kInnerIntakeMotorID, IntakeConstants.CANBUS_NAME);
-    intakeTalonOuter = new TalonFX(IntakeConstants.kOuterIntakeMotorID, IntakeConstants.CANBUS_NAME);
-
+  public FeederKraken() {
+    feederTalon = new TalonFX(FeederConstants.kFeederMotorID, FeederConstants.CANBUS_NAME);
+    feederBeamBreak = new DigitalInput(0);
 
     // Apply configs
-    intakeTalonInner.getConfigurator().apply(IntakeConstants.innerRollerConfig, 1.0);
-    intakeTalonOuter.getConfigurator().apply(IntakeConstants.outerRollerConfig, 1.0);
+    feederTalon.getConfigurator().apply(FeederConstants.FeederMotorConfig, 1.0);
 
     // Set inverts
-    intakeTalonInner.setInverted(false);
-    intakeTalonOuter.setInverted(true);
+    feederTalon.setInverted(false);
 
     // Set signals
-    Position = intakeTalonInner.getPosition();
-    Velocity = intakeTalonInner.getVelocity();
-    AppliedVolts = intakeTalonInner.getMotorVoltage();
-    SupplyCurrent = intakeTalonInner.getSupplyCurrent();
-    TorqueCurrent = intakeTalonInner.getTorqueCurrent();
-    TempCelsius = intakeTalonInner.getDeviceTemp();
+    Position = feederTalon.getPosition();
+    Velocity = feederTalon.getVelocity();
+    AppliedVolts = feederTalon.getMotorVoltage();
+    SupplyCurrent = feederTalon.getSupplyCurrent();
+    TorqueCurrent = feederTalon.getTorqueCurrent();
+    TempCelsius = feederTalon.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         100.0,
@@ -63,10 +63,11 @@ public class IntakeKraken implements IntakeIO {
         SupplyCurrent,
         TorqueCurrent,
         TempCelsius);
+
   }
 
   @Override
-  public void updateStats(IntakeIOStats stats) {
+  public void updateStats(FeederIOStats stats) {
     stats.MotorConnected =
         BaseStatusSignal.refreshAll(
                 Position,
@@ -88,38 +89,62 @@ public class IntakeKraken implements IntakeIO {
 
   @Override
   public void runVolts(double Volts) {
-    intakeTalonInner.setControl(voltageControl.withOutput(Volts));
+    feederTalon.setControl(voltageControl.withOutput(Volts));
   }
 
   @Override
   public void stop() {
-    intakeTalonInner.setControl(neutralControl);
-    intakeTalonOuter.setControl(neutralControl);
+    feederTalon.setControl(neutralControl);
   }
 
   @Override
-  public void runVelocity(double Rpm, double outerRpm, double Feedforward) {
+  public void intake(double Rpm) {
     if (Rpm != 0) {
-      intakeTalonInner.setControl(
+
+      if (!hasRing && feederBeamBreak.get()) { // first loop it sees the ring
+        hasRing = true;
+        feederTalon.setPosition(0.0); // reset motor encoder
+
+      }
+
+      if (hasRing && feederTalon.getPosition().getValue() <= FeederConstants.ringAdvance) {
+        feederTalon.setControl(
         velocityControl.withVelocity(Rpm / 60.0));
-      intakeTalonOuter.setControl(
+      } else if (!hasRing) {
+        feederTalon.setControl(
+        velocityControl.withVelocity(Rpm / 60.0)); 
+      } else {
+
+        feederTalon.setControl(neutralControl);
+      }
+      
+    } else {
+      feederTalon.setControl(neutralControl); // because TorqueFOC tuning doesnt like a 0 command
+    }
+  }
+
+  @Override
+  public void shoot(double Rpm) {
+    hasRing = false;
+
+    if (Rpm != 0) {
+      feederTalon.setControl(
         velocityControl.withVelocity(Rpm / 60.0));
     } else {
-      intakeTalonInner.setControl(neutralControl); // because TorqueFOC tuning doesnt like a 0 command
-      intakeTalonOuter.setControl(neutralControl);
+      feederTalon.setControl(neutralControl);
     }
-    
+
   }
 
   @Override
   /**
-   * @param kp P in PID
+   * @param kp P in PIDs
    * @param kV Amperage needed to sustain a high setpoint (kinda)
    * @param kS Amperage needed to overcome static friction (kinda)
    * kv ks and kp are the only values needed to get a good tune on any motor to attain a velocity
    */
   public void setPID(double kP, double kV, double kS) {
-    intakeTalonInner.getConfigurator().apply(new Slot0Configs()
+    feederTalon.getConfigurator().apply(new Slot0Configs()
       .withKP(kP)
       .withKV(kV)
       .withKS(kS));
@@ -127,7 +152,7 @@ public class IntakeKraken implements IntakeIO {
 
   @Override
   public void runCharacterization(double input) {
-    intakeTalonInner.setControl(voltageControl.withOutput(input));
+    feederTalon.setControl(voltageControl.withOutput(input));
   }
 
 }

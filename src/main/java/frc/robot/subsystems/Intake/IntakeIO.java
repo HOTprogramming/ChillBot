@@ -1,17 +1,25 @@
-package frc.robot.Intake;
+package frc.robot.subsystems.Intake;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public interface IntakeIO {
     class IntakeIOStats {
-        public boolean MotorConnected = true;    
-        public double PositionRads = 0.0;
-        public double VelocityRpm = 0.0;
-        public double AppliedVolts = 0.0;
-        public double SupplyCurrentAmps = 0.0;
-        public double TorqueCurrentAmps = 0.0;
-        public double TempCelsius = 0.0;
+        public boolean MotorConnectedInner = true;    
+        public double PositionRadsInner = 0.0;
+        public double VelocityRpmInner = 0.0;
+        public double AppliedVoltsInner = 0.0;
+        public double SupplyCurrentAmpsInner = 0.0;
+        public double TorqueCurrentAmpsInner = 0.0;
+        public double TempCelsiusInner = 0.0;
+
+        public boolean MotorConnectedOuter = true;    
+        public double PositionRadsOuter = 0.0;
+        public double VelocityRpmOuter = 0.0;
+        public double AppliedVoltsOuter = 0.0;
+        public double SupplyCurrentAmpsOuter = 0.0;
+        public double TorqueCurrentAmpsOuter = 0.0;
+        public double TempCelsiusOuter = 0.0;
       }
 
 /** Update stats */

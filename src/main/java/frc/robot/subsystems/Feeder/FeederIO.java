@@ -1,4 +1,4 @@
-package frc.robot.Feeder;
+package frc.robot.subsystems.Feeder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;

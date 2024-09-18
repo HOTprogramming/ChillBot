@@ -1,10 +1,9 @@
-package frc.robot.Drivetrain;
+package frc.robot.subsystems.Drivetrain;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 
 import static edu.wpi.first.units.Units.Volts;
-import static frc.robot.Drivetrain.DriveConstants.*;
-
+import static frc.robot.subsystems.Drivetrain.DriveConstants.*;
 
 import java.util.function.Supplier;
 
@@ -24,7 +23,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Drivetrain.DriveConstants.DriveConfig;
+import frc.robot.subsystems.Drivetrain.DriveConstants.DriveConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Notifier;
 

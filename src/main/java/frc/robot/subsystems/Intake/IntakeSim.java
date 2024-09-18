@@ -1,4 +1,4 @@
-package frc.robot.Intake;
+package frc.robot.subsystems.Intake;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -29,11 +29,11 @@ public class IntakeSim implements IntakeIO {
             runVolts(volt);
         }
 
-        stats.PositionRads +=
+        stats.PositionRadsInner +=
             Units.radiansToRotations(intakeSim.getAngularVelocityRadPerSec() * Constants.loopPeriodSecs);
-        stats.VelocityRpm = intakeSim.getAngularVelocityRPM();
-        stats.AppliedVolts = AppliedVolts;
-        stats.SupplyCurrentAmps = intakeSim.getCurrentDrawAmps();  
+        stats.VelocityRpmInner = intakeSim.getAngularVelocityRPM();
+        stats.AppliedVoltsInner = AppliedVolts;
+        stats.SupplyCurrentAmpsInner = intakeSim.getCurrentDrawAmps();  
     }
 
 

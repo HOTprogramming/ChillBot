@@ -1,4 +1,4 @@
-package frc.robot.Drivetrain;
+package frc.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -52,6 +52,4 @@ public interface DriveIO {
     }
 
     default void setTeamRotation(DriverStation.Alliance alliance) {}
-
-    default void setGains() {}
 }

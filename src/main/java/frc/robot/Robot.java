@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Drivetrain.DriveConstants;
+import frc.robot.subsystems.Drivetrain.DriveConstants;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -53,7 +53,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    m_robotContainer.drivetrain.setGains();
     m_robotContainer.drivetrain.setTeamRotation();
   }
 

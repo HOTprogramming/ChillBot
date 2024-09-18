@@ -1,4 +1,4 @@
-package frc.robot.Intake;
+package frc.robot.subsystems.Intake;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -8,12 +8,30 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Drivetrain.DriveIO.DriveIOdata;
-import frc.robot.Intake.IntakeIO.IntakeIOStats;
+import frc.robot.subsystems.Drivetrain.DriveIO.DriveIOdata;
+import frc.robot.subsystems.Intake.IntakeIO.IntakeIOStats;
 
 public class Intake extends SubsystemBase {
   private final IntakeIO io;
   private final IntakeIOStats stats = new IntakeIOStats();
+  private final ShuffleboardTab intakeShuffleboard;
+
+  /* Shuffleboard entrys */
+  private GenericEntry appliedVoltsInner;
+  private GenericEntry velocityRpmInner;
+  private GenericEntry positionInner;
+  private GenericEntry supplyCurrentInner;
+  private GenericEntry statorCurrentInner;
+  private GenericEntry tempInner;
+
+  private GenericEntry appliedVoltsOuter;
+  private GenericEntry velocityRpmOuter;
+  private GenericEntry positionOuter;
+  private GenericEntry supplyCurrentOuter;
+  private GenericEntry statorCurrentOuter;
+  private GenericEntry tempOuter;
+
+  private GenericEntry stateName;
 
 
   public enum State {
@@ -36,6 +54,26 @@ public class Intake extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
   public Intake(IntakeIO io) {
     this.io = io; 
+
+    this.intakeShuffleboard = Shuffleboard.getTab("Intake");
+
+    appliedVoltsInner = this.intakeShuffleboard.add("Intake Inner Volts", 0.0).getEntry();
+    velocityRpmInner = this.intakeShuffleboard.add("Intake RPM Inner", 0.0).getEntry();
+    positionInner = this.intakeShuffleboard.add("Intake Pos Inner", 0.0).getEntry();
+    supplyCurrentInner = this.intakeShuffleboard.add("Intake Supply Current Inner", 0.0).getEntry();
+    statorCurrentInner = this.intakeShuffleboard.add("Intake Stator Current Inner", 0.0).getEntry();
+    tempInner = this.intakeShuffleboard.add("Intake Temp Inner", 0.0).getEntry();
+
+
+    appliedVoltsOuter = this.intakeShuffleboard.add("Intake Outer Volts", 0.0).getEntry();
+    velocityRpmOuter = this.intakeShuffleboard.add("Intake RPM Outer", 0.0).getEntry();
+    positionOuter = this.intakeShuffleboard.add("Intake Pos Outer", 0.0).getEntry();
+    supplyCurrentOuter = this.intakeShuffleboard.add("Intake Supply Current Outer", 0.0).getEntry();
+    statorCurrentOuter = this.intakeShuffleboard.add("Intake Stator Current Outer", 0.0).getEntry();
+    tempOuter = this.intakeShuffleboard.add("Intake Temp Outer", 0.0).getEntry();
+
+
+    stateName = this.intakeShuffleboard.add("Intake State", this.currentState.name()).getEntry();
   }
 
   private void flipState(State inState ) {
@@ -108,13 +146,20 @@ public class Intake extends SubsystemBase {
   }
 
   private void UpdateTelemetry() {
-    SmartDashboard.putNumber("Applied Volts:",stats.AppliedVolts);
-    SmartDashboard.putNumber("Velocity RPM:",stats.VelocityRpm);
-    SmartDashboard.putNumber("Position (rads):",stats.PositionRads);
-    SmartDashboard.putNumber("Supply Current(Amps):",stats.SupplyCurrentAmps);
-    SmartDashboard.putString("StateName", currentState.name());
-    SmartDashboard.putNumber("Goal RPM", currentState.rpm);
-    SmartDashboard.putNumber("Applied Volts:",stats.AppliedVolts); 
+    appliedVoltsInner.setDouble(stats.AppliedVoltsInner);
+    velocityRpmInner.setDouble(stats.VelocityRpmInner);
+    positionInner.setDouble(stats.PositionRadsInner);
+    supplyCurrentInner.setDouble(stats.SupplyCurrentAmpsInner);
+    statorCurrentInner.setDouble(stats.TorqueCurrentAmpsInner);
+
+    appliedVoltsOuter.setDouble(stats.AppliedVoltsOuter);
+    velocityRpmOuter.setDouble(stats.VelocityRpmOuter);
+    positionOuter.setDouble(stats.PositionRadsOuter);
+    supplyCurrentOuter.setDouble(stats.SupplyCurrentAmpsOuter);
+    statorCurrentOuter.setDouble(stats.TorqueCurrentAmpsOuter);
+
+    stateName.setString(currentState.name());
+
   }
 
   @Override
