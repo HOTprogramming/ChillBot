@@ -30,11 +30,11 @@ public class ShooterIOSim implements ShooterIO {
             runVolts(volt);
         }
 
-        stats.PositionRads +=
+        stats.PositionRadsLeft +=
             Units.radiansToRotations(shooterSim.getAngularVelocityRadPerSec() * Constants.loopPeriodSecs);
-        stats.VelocityRpm = shooterSim.getAngularVelocityRPM();
-        stats.AppliedVolts = AppliedVolts;
-        stats.SupplyCurrentAmps = shooterSim.getCurrentDrawAmps();  
+        stats.VelocityRpmLeft = shooterSim.getAngularVelocityRPM();
+        stats.AppliedVoltsLeft = AppliedVolts;
+        stats.SupplyCurrentAmpsLeft = shooterSim.getCurrentDrawAmps();  
     }
 
 

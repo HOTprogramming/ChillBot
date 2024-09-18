@@ -50,6 +50,14 @@ private final StatusSignal<Double> armFollowerPosition;
 private final StatusSignal<Double> armFollowerVelocity;
 private final StatusSignal<Double> armFollowerRotorPos;
 
+private final StatusSignal<Double> SupplyCurrentLeader;
+private final StatusSignal<Double> TorqueCurrentLeader;
+private final StatusSignal<Double> TempCelsiusLeader;
+
+private final StatusSignal<Double> SupplyCurrentFollower;
+private final StatusSignal<Double> TorqueCurrentFollower;
+private final StatusSignal<Double> TempCelsiusFollower;
+
 
   public ArmIOKraken() {
     armMotor = new TalonFX(ArmConstants.arm1MotorID, "drivetrain");
@@ -128,6 +136,14 @@ private final StatusSignal<Double> armFollowerRotorPos;
     armFollowerVelocity = armMotor.getVelocity();
     armFollowerRotorPos = armMotor.getRotorPosition();
 
+    SupplyCurrentLeader = armMotor.getSupplyCurrent();
+    TorqueCurrentLeader = armMotor.getTorqueCurrent();
+    TempCelsiusLeader = armMotor.getDeviceTemp();
+
+    SupplyCurrentFollower = armMotorFollower.getSupplyCurrent();
+    TorqueCurrentFollower = armMotorFollower.getTorqueCurrent();
+    TempCelsiusFollower = armMotorFollower.getDeviceTemp();
+
     BaseStatusSignal.setUpdateFrequencyForAll(
         100.0,
         f_fusedSensorOutOfSync,
@@ -141,25 +157,38 @@ private final StatusSignal<Double> armFollowerRotorPos;
         armRotorPos,
         armFollowerPosition,
         armFollowerVelocity,
-        armFollowerRotorPos);
+        armFollowerRotorPos,
+        SupplyCurrentLeader,
+        TorqueCurrentLeader,
+        TempCelsiusLeader,
+        SupplyCurrentFollower,
+        TorqueCurrentFollower,
+        TempCelsiusFollower
+      );
   }
 
   @Override
   public void updateArmStats(ArmIOStats stats) {
     stats.armMotorConnected =
         BaseStatusSignal.refreshAll(
-           f_fusedSensorOutOfSync,
-           sf_fusedSensorOutOfSync,
-           f_remoteSensorInvalid,
-           sf_remoteSensorInvalid,
-           armPosition,
-           armVelocity,
-           cancoderPosition,
-           cancoderVelocity,
-           armRotorPos,
+          f_fusedSensorOutOfSync,
+          sf_fusedSensorOutOfSync,
+          f_remoteSensorInvalid,
+          sf_remoteSensorInvalid,
+          armPosition,
+          armVelocity,
+          cancoderPosition,
+          cancoderVelocity,
+          armRotorPos,
           armFollowerPosition,
           armFollowerVelocity,
-          armFollowerRotorPos)
+          armFollowerRotorPos,
+          SupplyCurrentLeader,
+          TorqueCurrentLeader,
+          TempCelsiusLeader,
+          SupplyCurrentFollower,
+          TorqueCurrentFollower,
+          TempCelsiusFollower)
             .isOK();
 
     stats.cancoderPosition = cancoderPosition.getValueAsDouble();
@@ -170,6 +199,13 @@ private final StatusSignal<Double> armFollowerRotorPos;
     stats.armFollowerPosition = armFollowerPosition.getValueAsDouble();
     stats.armFollowerVelocity = armFollowerVelocity.getValueAsDouble();
 
+    stats.SupplyCurrentAmpsLeader = SupplyCurrentLeader.getValueAsDouble();
+    stats.TorqueCurrentAmpsLeader = TorqueCurrentLeader.getValueAsDouble();
+    stats.TempCelsiusLeader = TempCelsiusLeader.getValueAsDouble();
+
+    stats.SupplyCurrentAmpsFollower = SupplyCurrentFollower.getValueAsDouble();
+    stats.TorqueCurrentAmpsFollower = TorqueCurrentFollower.getValueAsDouble();
+    stats.TempCelsiusFollower = TempCelsiusFollower.getValueAsDouble();
   }
 
   @Override
@@ -177,6 +213,5 @@ private final StatusSignal<Double> armFollowerRotorPos;
   armMotor.setControl(armMagic.withPosition(commandedPosition).withSlot(0));
   armMotorFollower.setControl(armMagic.withPosition(commandedPosition).withSlot(0));
   }
-
 
 }

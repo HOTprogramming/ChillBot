@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems.Shooter;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,8 +15,31 @@ import frc.robot.subsystems.Shooter.ShooterIO.ShooterIOStats;
 public class ShooterSubsystem extends SubsystemBase {
   private final ShooterIO io;
   private final ShooterIOStats stats = new ShooterIOStats();
+  private final ShuffleboardTab shooterShuffleboard;
+
+  /* Shuffleboard entrys */
+  private GenericEntry appliedVoltsLeft;
+  private GenericEntry velocityRpmLeft;
+  private GenericEntry positionLeft;
+  private GenericEntry supplyCurrentLeft;
+  private GenericEntry statorCurrentLeft;
+  private GenericEntry tempLeft;
+
+  private GenericEntry appliedVoltsRight;
+  private GenericEntry velocityRpmRight;
+  private GenericEntry positionRight;
+  private GenericEntry supplyCurrentRight;
+  private GenericEntry statorCurrentRight;
+  private GenericEntry tempRight;
+
+  private GenericEntry stateName;
+
+  private GenericEntry shuffKP;
+  private GenericEntry shuffKS;
+  private GenericEntry shuffKV;
+
   
-  private static final double _SHOOT = 2000.0; 
+  private static final double _SHOOT = 3500.0; 
   private static final double _IDLE = 1000.0;
   private static final double _OFF = 0.0; 
 
@@ -35,6 +61,31 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public ShooterSubsystem(ShooterIO io) {
     this.io = io; 
+
+    this.shooterShuffleboard = Shuffleboard.getTab("Shooter");
+
+    appliedVoltsLeft = this.shooterShuffleboard.add("Shooter Left Volts", 0.0).getEntry();
+    velocityRpmLeft = this.shooterShuffleboard.add("Shooter RPM Left", 0.0).getEntry();
+    positionLeft = this.shooterShuffleboard.add("Shooter Pos Left", 0.0).getEntry();
+    supplyCurrentLeft = this.shooterShuffleboard.add("Shooter Supply Current Left", 0.0).getEntry();
+    statorCurrentLeft = this.shooterShuffleboard.add("Shooter Stator Current Left", 0.0).getEntry();
+    tempLeft = this.shooterShuffleboard.add("Shooter Temp Left", 0.0).getEntry();
+
+
+    appliedVoltsRight = this.shooterShuffleboard.add("Shooter Right Volts", 0.0).getEntry();
+    velocityRpmRight = this.shooterShuffleboard.add("Shooter RPM Right", 0.0).getEntry();
+    positionRight = this.shooterShuffleboard.add("Shooter Pos Right", 0.0).getEntry();
+    supplyCurrentRight = this.shooterShuffleboard.add("Shooter Supply Current Right", 0.0).getEntry();
+    statorCurrentRight = this.shooterShuffleboard.add("Shooter Stator Current Right", 0.0).getEntry();
+    tempRight = this.shooterShuffleboard.add("Shooter Temp Right", 0.0).getEntry();
+
+
+    stateName = this.shooterShuffleboard.add("Shooter State", this.currentState.name()).getEntry();
+
+    shuffKP = this.shooterShuffleboard.add("Shooter KP", 0.0).getEntry();
+    shuffKS = this.shooterShuffleboard.add("Shooter KS", 0.0).getEntry();
+    shuffKV = this.shooterShuffleboard.add("Shooter KV", 0.0).getEntry();
+
   }
 
   public Command shootCommand() {
@@ -76,13 +127,29 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   private void UpdateTelemetry() {
-    SmartDashboard.putNumber("Applied Volts:",stats.AppliedVolts);
-    SmartDashboard.putNumber("Velocity RPM:",stats.VelocityRpm);
-    SmartDashboard.putNumber("Position (rads):",stats.PositionRads);
-    SmartDashboard.putNumber("Supply Current(Amps):",stats.SupplyCurrentAmps);
-    SmartDashboard.putString("StateName", currentState.name());
-    SmartDashboard.putNumber("Goal RPM", currentState.rpm);
-    SmartDashboard.putNumber("Applied Volts:",stats.AppliedVolts); 
+    SmartDashboard.putNumber("ShooterGoal", currentState.rpm);
+    appliedVoltsLeft.setDouble(stats.AppliedVoltsLeft);
+    velocityRpmLeft.setDouble(stats.VelocityRpmLeft);
+    positionLeft.setDouble(stats.PositionRadsLeft);
+    supplyCurrentLeft.setDouble(stats.SupplyCurrentAmpsLeft);
+    statorCurrentLeft.setDouble(stats.TorqueCurrentAmpsLeft);
+    tempLeft.setDouble(stats.TempCelsiusLeft);
+
+    appliedVoltsRight.setDouble(stats.AppliedVoltsRight);
+    velocityRpmRight.setDouble(stats.VelocityRpmRight);
+    positionRight.setDouble(stats.PositionRadsRight);
+    supplyCurrentRight.setDouble(stats.SupplyCurrentAmpsRight);
+    statorCurrentRight.setDouble(stats.TorqueCurrentAmpsRight);
+    tempRight.setDouble(stats.TempCelsiusRight);
+
+    stateName.setString(currentState.name());
+  }
+
+  public Command setPID() {
+    return runOnce(() -> {io.setPID(
+      this.shuffKP.getDouble(0.0),
+      this.shuffKS.getDouble(0.0), 
+      this.shuffKV.getDouble(0.0));});
   }
 
   @Override

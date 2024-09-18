@@ -7,18 +7,18 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Drivetrain.Drive;
-import frc.robot.Drivetrain.DriveIO;
-import frc.robot.Drivetrain.DriveKraken;
-import frc.robot.Drivetrain.DriveSim;
-import frc.robot.Feeder.Feeder;
-import frc.robot.Feeder.FeederKraken;
-import frc.robot.Feeder.FeederSim;
-import frc.robot.Intake.Intake;
-import frc.robot.Intake.IntakeKraken;
-import frc.robot.Intake.IntakeSim;
 import frc.robot.subsystems.Arm.ArmIOKraken;
 import frc.robot.subsystems.Arm.ArmSubsystem;
+import frc.robot.subsystems.Drivetrain.Drive;
+import frc.robot.subsystems.Drivetrain.DriveIO;
+import frc.robot.subsystems.Drivetrain.DriveKraken;
+import frc.robot.subsystems.Drivetrain.DriveSim;
+import frc.robot.subsystems.Feeder.Feeder;
+import frc.robot.subsystems.Feeder.FeederKraken;
+import frc.robot.subsystems.Feeder.FeederSim;
+import frc.robot.subsystems.Intake.Intake;
+import frc.robot.subsystems.Intake.IntakeKraken;
+import frc.robot.subsystems.Intake.IntakeSim;
 import frc.robot.subsystems.Shooter.ShooterIOKraken;
 import frc.robot.subsystems.Shooter.ShooterSubsystem;
 
@@ -58,11 +58,11 @@ public class RobotContainer {
         this.feeder = new Feeder(feederSim);
       }
     }
-    drivetrain.setGains();
 
     configureBindings();
   }
 
+  /* Driver Controller */
   private void configureBindings() {
     drivetrain.setDefaultCommand
       (drivetrain.run(
@@ -80,10 +80,11 @@ public class RobotContainer {
     driver.b().whileTrue(intake.ejectCommand()).whileFalse(intake.idleCommand());
     driver.x().whileTrue(intake.idleCommand());
     
-  
+    /* Operator Controller*/
     operator.b().whileTrue(Commands.parallel(m_armSubsystem.protectCommand(), m_shooterSubsystem.shootCommand()));
     operator.y().whileTrue(Commands.parallel(m_armSubsystem.batterCommand(), m_shooterSubsystem.shootCommand()));
     operator.a().whileTrue(Commands.parallel(m_armSubsystem.zeroCommand(), m_shooterSubsystem.idleCommand()));
+    operator.x().whileTrue(m_shooterSubsystem.setPID());
 
   }
 

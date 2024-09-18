@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems.Arm;
 
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -12,6 +15,31 @@ import frc.robot.subsystems.Arm.ArmIO.ArmIOStats;
 public class ArmSubsystem extends SubsystemBase {
   private final ArmIO io;
   private final ArmIOStats stats = new ArmIOStats();
+  private final ShuffleboardTab armShuffleboard;
+
+  /* Shuffleboard entrys */
+  private GenericEntry velocityRpmLeader;
+  private GenericEntry positionLeader;
+  private GenericEntry supplyCurrentLeader;
+  private GenericEntry statorCurrentLeader;
+  private GenericEntry tempLeader;
+
+  private GenericEntry velocityRpmCancoder;
+  private GenericEntry positionCancoder;
+
+  private GenericEntry velocityRpmFollower;
+  private GenericEntry positionFollower;
+  private GenericEntry supplyCurrentFollower;
+  private GenericEntry statorCurrentFollower;
+  private GenericEntry tempFollower;
+
+  private GenericEntry goalPose;
+  private GenericEntry stateName;
+
+  private GenericEntry f_fusedSensorOutOfSync;
+  private GenericEntry sf_fusedSensorOutOfSync;
+  private GenericEntry f_remoteSensorInvalid;
+  private GenericEntry sf_remoteSensorInvalid;
   
   //lowest value is 0.984, highest value is 1.17
   private static final double ZERO_POS = 1.0;
@@ -35,6 +63,31 @@ public class ArmSubsystem extends SubsystemBase {
 
   public ArmSubsystem(ArmIO io) {
     this.io = io; 
+
+    this.armShuffleboard = Shuffleboard.getTab("Arm");
+
+    velocityRpmLeader = this.armShuffleboard.add("Arm RPM Leader", 0.0).getEntry();
+    positionLeader = this.armShuffleboard.add("Arm Pos Leader", 0.0).getEntry();
+    supplyCurrentLeader = this.armShuffleboard.add("Arm Supply Current Leader", 0.0).getEntry();
+    statorCurrentLeader = this.armShuffleboard.add("Arm Stator Current Leader", 0.0).getEntry();
+    tempLeader = this.armShuffleboard.add("Arm Temp Leader", 0.0).getEntry();
+
+    velocityRpmCancoder = this.armShuffleboard.add("Arm RPM Cancoder", 0.0).getEntry();
+    positionCancoder = this.armShuffleboard.add("Arm Pos Cancoder", 0.0).getEntry();
+
+    velocityRpmFollower = this.armShuffleboard.add("Arm RPM Follower", 0.0).getEntry();
+    positionFollower = this.armShuffleboard.add("Arm Pos Follower", 0.0).getEntry();
+    supplyCurrentFollower = this.armShuffleboard.add("Arm Supply Current Follower", 0.0).getEntry();
+    statorCurrentFollower = this.armShuffleboard.add("Arm Stator Current Follower", 0.0).getEntry();
+    tempFollower = this.armShuffleboard.add("Arm Temp Follower", 0.0).getEntry();
+
+    goalPose = this.armShuffleboard.add("Arm Goal", 0.0).getEntry();
+    stateName = this.armShuffleboard.add("Arm State", this.currentState.name()).getEntry();
+
+    f_fusedSensorOutOfSync = this.armShuffleboard.add("f_fusedSensorOutOfSync", false).getEntry();
+    sf_fusedSensorOutOfSync = this.armShuffleboard.add("sf_fusedSensorOutOfSync", false).getEntry();
+    f_remoteSensorInvalid = this.armShuffleboard.add("f_remoteSensorInvalid", false).getEntry();
+    sf_remoteSensorInvalid = this.armShuffleboard.add("sf_remoteSensorInvalid", false).getEntry();
   }
 
 
@@ -68,14 +121,28 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   private void UpdateTelemetry() {
-    SmartDashboard.putNumber("Cancoder Position:",stats.cancoderPosition);
-    SmartDashboard.putNumber("Cancoder Velocity",stats.cancoderVelocity);
-    SmartDashboard.putNumber("Arm Position",stats.armPosition);
-    SmartDashboard.putNumber("Arm Velocity",stats.armVelocity);
-    SmartDashboard.putNumber("Arm Follower Velocity",stats.armFollowerVelocity);
-    SmartDashboard.putNumber("Arm Follower Position",stats.armFollowerPosition);
-    SmartDashboard.putString("Arm State", currentState.name());
-    SmartDashboard.putNumber("Goal Arm Pos", currentState.armPos);
+    velocityRpmLeader.setDouble(stats.armVelocity);
+    positionLeader.setDouble(stats.armPosition);
+    supplyCurrentLeader.setDouble(stats.SupplyCurrentAmpsLeader);
+    statorCurrentLeader.setDouble(stats.TorqueCurrentAmpsLeader);
+    tempLeader.setDouble(stats.TempCelsiusLeader);
+
+    velocityRpmCancoder.setDouble(stats.cancoderPosition);
+    positionCancoder.setDouble(stats.cancoderVelocity);
+
+    velocityRpmFollower.setDouble(stats.armFollowerVelocity);
+    positionFollower.setDouble(stats.armFollowerPosition);
+    supplyCurrentFollower.setDouble(stats.SupplyCurrentAmpsFollower);
+    statorCurrentFollower.setDouble(stats.TorqueCurrentAmpsFollower);
+    tempFollower.setDouble(stats.TempCelsiusFollower);
+
+    goalPose.setDouble(currentState.armPos);
+    stateName.setString(currentState.name());
+
+    f_fusedSensorOutOfSync.setBoolean(stats.f_fusedSensorOutOfSync);
+    sf_fusedSensorOutOfSync.setBoolean(stats.sf_fusedSensorOutOfSync);
+    f_remoteSensorInvalid.setBoolean(stats.f_remoteSensorInvalid);
+    sf_remoteSensorInvalid.setBoolean(stats.sf_remoteSensorInvalid);
   }
 
   @Override

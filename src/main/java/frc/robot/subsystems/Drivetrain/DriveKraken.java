@@ -1,8 +1,7 @@
-package frc.robot.Drivetrain;
+package frc.robot.subsystems.Drivetrain;
 
 import static edu.wpi.first.units.Units.Volts;
-
-import static frc.robot.Drivetrain.DriveConstants.*;
+import static frc.robot.subsystems.Drivetrain.DriveConstants.*;
 
 import java.util.function.Supplier;
 
@@ -49,6 +48,17 @@ public class DriveKraken extends SwerveDrivetrain implements DriveIO {
         DriveConfig.BACK_LEFT(), 
         DriveConfig.BACK_RIGHT());
 
+        for (int i = 0; i < ModuleCount; i++) {
+            Modules[i].getDriveMotor().getConfigurator().apply(DriveConstants.SWERVE_DRIVE_GAINS, 1.0);
+            Modules[i].getSteerMotor().getConfigurator().apply(DriveConstants.SWERVE_STEER_GAINS, 1.0);
+
+            // apply all types of current limits because 2024 ptsd :)
+            Modules[i].getDriveMotor().getConfigurator().apply(DriveConstants.DRIVE_CURRENT_LIMITS, 1.0);
+            Modules[i].getSteerMotor().getConfigurator().apply(DriveConstants.AZIMUTH_CURRENT_LIMITS, 1.0);
+
+            Modules[i].getDriveMotor().getConfigurator().apply(DriveConstants.DRIVE_TORQUE_CONFIGS, 1.0);
+            Modules[i].getSteerMotor().getConfigurator().apply(DriveConstants.AZIMUTH_TORQUE_CONFIGS, 1.0);
+        }
     }
 
     @Override
@@ -83,24 +93,4 @@ public class DriveKraken extends SwerveDrivetrain implements DriveIO {
             this.setOperatorPerspectiveForward(BlueAlliancePerspectiveRotation);
         }
     }
-
-    @Override
-    public void setGains() {
-        for (int i = 0; i < ModuleCount; i++) {
-            StatusCode Status = StatusCode.StatusCodeNotInitialized;
-
-            for (int j = 0; j < 5; ++j) {
-                Modules[i].getDriveMotor().getConfigurator().apply(DriveConstants.SWERVE_DRIVE_GAINS);
-                if (Status.isOK()) break;
-            }
-
-            Status = StatusCode.StatusCodeNotInitialized;
-
-            for (int j = 0; j < 5; ++j) {
-                Modules[i].getSteerMotor().getConfigurator().apply(DriveConstants.SWERVE_STEER_GAINS);
-                if (Status.isOK()) break;
-            }
-        }
-    }
-
 }
