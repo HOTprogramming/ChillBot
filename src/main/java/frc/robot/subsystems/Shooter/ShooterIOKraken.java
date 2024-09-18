@@ -1,4 +1,6 @@
 package frc.robot.subsystems.Shooter;
+import javax.swing.text.Position;
+
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -12,6 +14,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Velocity;
 
 public class ShooterIOKraken  implements ShooterIO {
   // Hardware
@@ -19,12 +22,19 @@ public class ShooterIOKraken  implements ShooterIO {
   private final TalonFX shooter2;
 
   // Status Signals
-  private final StatusSignal<Double> Position;
-  private final StatusSignal<Double> Velocity;
-  private final StatusSignal<Double> AppliedVolts;
-  private final StatusSignal<Double> SupplyCurrent;
-  private final StatusSignal<Double> TorqueCurrent;
-  private final StatusSignal<Double> TempCelsius;
+  private final StatusSignal<Double> PositionLeft;
+  private final StatusSignal<Double> VelocityLeft;
+  private final StatusSignal<Double> AppliedVoltsLeft;
+  private final StatusSignal<Double> SupplyCurrentLeft;
+  private final StatusSignal<Double> TorqueCurrentLeft;
+  private final StatusSignal<Double> TempCelsiusLeft;
+
+  private final StatusSignal<Double> PositionRight; // im here
+  private final StatusSignal<Double> VelocityRight;
+  private final StatusSignal<Double> AppliedVoltsRight;
+  private final StatusSignal<Double> SupplyCurrentRight;
+  private final StatusSignal<Double> TorqueCurrentRight;
+  private final StatusSignal<Double> TempCelsiusRight;
 
   // Control
   private final Slot0Configs controllerConfig = new Slot0Configs();
@@ -73,41 +83,72 @@ public class ShooterIOKraken  implements ShooterIO {
 
 
     // Set signals
-    Position = shooter1.getPosition();
-    Velocity = shooter1.getVelocity();
-    AppliedVolts = shooter1.getMotorVoltage();
-    SupplyCurrent = shooter1.getSupplyCurrent();
-    TorqueCurrent = shooter1.getTorqueCurrent();
-    TempCelsius = shooter1.getDeviceTemp();
+    PositionLeft = shooter1.getPosition();
+    VelocityLeft = shooter1.getVelocity();
+    AppliedVoltsLeft = shooter1.getMotorVoltage();
+    SupplyCurrentLeft = shooter1.getSupplyCurrent();
+    TorqueCurrentLeft = shooter1.getTorqueCurrent();
+    TempCelsiusLeft = shooter1.getDeviceTemp();
+
+    PositionRight = shooter2.getPosition();
+    VelocityRight = shooter2.getVelocity();
+    AppliedVoltsRight = shooter2.getMotorVoltage();
+    SupplyCurrentRight = shooter2.getSupplyCurrent();
+    TorqueCurrentRight = shooter2.getTorqueCurrent();
+    TempCelsiusRight = shooter2.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         100.0,
-        Position,
-        Velocity,
-        AppliedVolts,
-        SupplyCurrent,
-        TorqueCurrent,
-        TempCelsius);
+        PositionLeft,
+        VelocityLeft,
+        AppliedVoltsLeft,
+        SupplyCurrentLeft,
+        TorqueCurrentLeft,
+        TempCelsiusLeft,
+        
+        PositionRight,
+        VelocityRight,
+        AppliedVoltsRight,
+        SupplyCurrentRight,
+        TorqueCurrentRight,
+        TempCelsiusRight);
   }
 
   @Override
   public void updateStats(ShooterIOStats stats) {
-    stats.MotorConnected =
+    stats.MotorConnectedLeft =
         BaseStatusSignal.refreshAll(
-                Position,
-                Velocity,
-                AppliedVolts,
-                SupplyCurrent,
-                TorqueCurrent,
-                TempCelsius)
+          PositionLeft,
+          VelocityLeft,
+          AppliedVoltsLeft,
+          SupplyCurrentLeft,
+          TorqueCurrentLeft,
+          TempCelsiusLeft)
             .isOK();
 
-    stats.PositionRads = Units.rotationsToRadians(Position.getValueAsDouble());
-    stats.VelocityRpm = Velocity.getValueAsDouble() * 60.0;
-    stats.AppliedVolts = AppliedVolts.getValueAsDouble();
-    stats.SupplyCurrentAmps = SupplyCurrent.getValueAsDouble();
-    stats.TorqueCurrentAmps = TorqueCurrent.getValueAsDouble();
-    stats.TempCelsius = TempCelsius.getValueAsDouble();
+    stats.MotorConnectedRight =
+        BaseStatusSignal.refreshAll( 
+          PositionRight,
+          VelocityRight,
+          AppliedVoltsRight,
+          SupplyCurrentRight,
+          TorqueCurrentRight,
+          TempCelsiusRight)
+            .isOK();
+
+    stats.PositionRadsLeft = Units.rotationsToRadians(PositionLeft.getValueAsDouble());
+    stats.VelocityRpmLeft = VelocityLeft.getValueAsDouble() * 60.0;
+    stats.AppliedVoltsLeft = AppliedVoltsLeft.getValueAsDouble();
+    stats.SupplyCurrentAmpsLeft = SupplyCurrentLeft.getValueAsDouble();
+    stats.TorqueCurrentAmpsLeft = TorqueCurrentLeft.getValueAsDouble();
+    stats.TempCelsiusLeft = TempCelsiusLeft.getValueAsDouble();
+
+    stats.PositionRadsRight = Units.rotationsToRadians(PositionRight.getValueAsDouble());
+    stats.VelocityRpmRight = VelocityRight.getValueAsDouble() * 60.0;
+    stats.AppliedVoltsRight = AppliedVoltsRight.getValueAsDouble();
+    stats.SupplyCurrentAmpsRight = SupplyCurrentRight.getValueAsDouble();
+    stats.TorqueCurrentAmpsRight = TorqueCurrentRight.getValueAsDouble();
+    stats.TempCelsiusRight = TempCelsiusRight.getValueAsDouble();
 
   }
 

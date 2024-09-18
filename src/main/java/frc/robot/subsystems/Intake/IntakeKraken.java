@@ -98,7 +98,7 @@ public class IntakeKraken implements IntakeIO {
           TempCelsiusInner)
             .isOK();
 
-    stats.MotorConnectedInner =
+    stats.MotorConnectedOuter =
         BaseStatusSignal.refreshAll( 
           PositionOuter,
           VelocityOuter,
