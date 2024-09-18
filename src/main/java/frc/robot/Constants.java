@@ -4,7 +4,6 @@
 
   package frc.robot;
 
-  import edu.wpi.first.wpilibj.RobotBase;
 
   /**
    * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -20,18 +19,7 @@
     public static final boolean tuningMode = false;
 
     public static RobotType getRobot() {
-      if (!disableHAL && RobotBase.isReal() && robotType == RobotType.SIMBOT) {
-        System.err.println("Invalid robot selected, using competition robot as default.");
-        robotType = RobotType.COMPBOT;
-      }
       return robotType;
-    }
-
-    public static Mode getMode() {
-      return switch (robotType) {
-        case DEVBOT, COMPBOT -> RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
-        case SIMBOT -> Mode.SIM;
-      };
     }
 
     public enum Mode {

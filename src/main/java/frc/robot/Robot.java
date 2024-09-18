@@ -21,7 +21,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    m_robotContainer.drivetrain.periodic(); // edit after explination from keith
     CommandScheduler.getInstance().run();
   }
 
@@ -30,7 +29,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {}
-
+  
   @Override
   public void disabledExit() {}
 
