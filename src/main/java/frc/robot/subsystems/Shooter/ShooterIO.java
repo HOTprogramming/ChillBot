@@ -11,6 +11,7 @@ public interface ShooterIO {
                 public double TorqueCurrentAmpsLeft = 0.0;
                 public double TempCelsiusLeft = 0.0;
 
+
                 public boolean MotorConnectedRight = true;    
                 public double PositionRadsRight = 0.0;
                 public double VelocityRpmRight = 0.0;

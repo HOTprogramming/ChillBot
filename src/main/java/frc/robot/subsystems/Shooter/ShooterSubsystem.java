@@ -34,8 +34,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private GenericEntry stateName;
 
+  private GenericEntry shuffKP;
+  private GenericEntry shuffKS;
+  private GenericEntry shuffKV;
+
   
-  private static final double _SHOOT = 2000.0; 
+  private static final double _SHOOT = 3500.0; 
   private static final double _IDLE = 1000.0;
   private static final double _OFF = 0.0; 
 
@@ -77,6 +81,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
 
     stateName = this.shooterShuffleboard.add("Shooter State", this.currentState.name()).getEntry();
+
+    shuffKP = this.shooterShuffleboard.add("Shooter KP", 0.0).getEntry();
+    shuffKS = this.shooterShuffleboard.add("Shooter KS", 0.0).getEntry();
+    shuffKV = this.shooterShuffleboard.add("Shooter KV", 0.0).getEntry();
+
   }
 
   public Command shootCommand() {
@@ -118,19 +127,29 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   private void UpdateTelemetry() {
+    SmartDashboard.putNumber("ShooterGoal", currentState.rpm);
     appliedVoltsLeft.setDouble(stats.AppliedVoltsLeft);
     velocityRpmLeft.setDouble(stats.VelocityRpmLeft);
     positionLeft.setDouble(stats.PositionRadsLeft);
     supplyCurrentLeft.setDouble(stats.SupplyCurrentAmpsLeft);
     statorCurrentLeft.setDouble(stats.TorqueCurrentAmpsLeft);
+    tempLeft.setDouble(stats.TempCelsiusLeft);
 
     appliedVoltsRight.setDouble(stats.AppliedVoltsRight);
     velocityRpmRight.setDouble(stats.VelocityRpmRight);
     positionRight.setDouble(stats.PositionRadsRight);
     supplyCurrentRight.setDouble(stats.SupplyCurrentAmpsRight);
     statorCurrentRight.setDouble(stats.TorqueCurrentAmpsRight);
+    tempRight.setDouble(stats.TempCelsiusRight);
 
     stateName.setString(currentState.name());
+  }
+
+  public Command setPID() {
+    return runOnce(() -> {io.setPID(
+      this.shuffKP.getDouble(0.0),
+      this.shuffKS.getDouble(0.0), 
+      this.shuffKV.getDouble(0.0));});
   }
 
   @Override

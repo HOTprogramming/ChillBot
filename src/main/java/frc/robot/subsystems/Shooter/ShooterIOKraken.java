@@ -169,11 +169,12 @@ public class ShooterIOKraken  implements ShooterIO {
   }
 
   @Override
-  public void setPID(double kP, double kI, double kD) {
+  public void setPID(double kP, double kS, double kV) {
     controllerConfig.kP = kP;
-    controllerConfig.kI = kI;
-    controllerConfig.kD = kD;
-    shooter1.getConfigurator().apply(controllerConfig);
+    controllerConfig.kS = kS;
+    controllerConfig.kV = kV;
+    shooter1.getConfigurator().apply(controllerConfig, 1.0);
+    shooter2.getConfigurator().apply(controllerConfig, 1.0);
   }
 
   @Override

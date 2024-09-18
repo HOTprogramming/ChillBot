@@ -56,7 +56,7 @@ public class Feeder extends SubsystemBase {
     statorCurrent = this.feederShuffleboard.add("Feeder Stator Current", 0.0).getEntry();
     temp = this.feederShuffleboard.add("Feeder Temp", 0.0).getEntry();
 
-    stateName = this.feederShuffleboard.add("Feeder Temp", currentState.name()).getEntry();
+    stateName = this.feederShuffleboard.add("Feeder State", currentState.name()).getEntry();
   }
 
   private void flipState(State inState ) {
@@ -145,6 +145,7 @@ public class Feeder extends SubsystemBase {
     position.setDouble(stats.PositionRads);
     supplyCurrent.setDouble(stats.SupplyCurrentAmps);
     statorCurrent.setDouble(stats.TorqueCurrentAmps);
+    temp.setDouble(stats.TempCelsius);
 
     stateName.setString(currentState.name());
   }
