@@ -48,7 +48,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public Command batterCommand() {
-    return runOnce(() -> {currentState = State.BATTER; });
+    return runOnce(() -> {currentState = State.BATTER;});
   }
 
   public boolean armExampleCondition() {
