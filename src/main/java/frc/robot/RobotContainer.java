@@ -11,6 +11,9 @@ import frc.robot.Drivetrain.Drive;
 import frc.robot.Drivetrain.DriveIO;
 import frc.robot.Drivetrain.DriveKraken;
 import frc.robot.Drivetrain.DriveSim;
+import frc.robot.Feeder.Feeder;
+import frc.robot.Feeder.FeederKraken;
+import frc.robot.Feeder.FeederSim;
 import frc.robot.Intake.Intake;
 import frc.robot.Intake.IntakeKraken;
 import frc.robot.Intake.IntakeSim;
@@ -18,6 +21,7 @@ import frc.robot.Intake.IntakeSim;
 public class RobotContainer {
   public Drive drivetrain;
   public Intake intake;
+  public Feeder feeder;
 
   private final CommandXboxController driver = new CommandXboxController(0);
 
@@ -26,17 +30,21 @@ public class RobotContainer {
       case COMPBOT -> {
         DriveKraken krakenDrive = new DriveKraken();
         IntakeKraken intakeKraken = new IntakeKraken();
+        FeederKraken feederKraken = new FeederKraken();
 
         this.drivetrain = new Drive(krakenDrive);
         this.intake = new Intake(intakeKraken);
+        this.feeder = new Feeder(feederKraken);
       }
       case DEVBOT -> {}
       case SIMBOT -> {
         DriveSim simIO = new DriveSim();
         IntakeSim intakeSim = new IntakeSim();
+        FeederSim feederSim = new FeederSim();
 
         this.drivetrain = new Drive(simIO);
         this.intake = new Intake(intakeSim);
+        this.feeder = new Feeder(feederSim);
       }
     }
     drivetrain.setGains();
@@ -56,9 +64,11 @@ public class RobotContainer {
           }
       ));
 
-    driver.a().whileTrue(intake.intakeCommand()).whileFalse(intake.idleCommand());
+    driver.y().whileTrue(feeder.shoot()).whileFalse(feeder.idleCommand());
+    driver.a().whileTrue(Commands.parallel(intake.intakeCommand(), feeder.FeederCommand())).whileFalse(Commands.parallel(intake.idleCommand(), feeder.idleCommand()));
     driver.b().whileTrue(intake.ejectCommand()).whileFalse(intake.idleCommand());
     driver.x().whileTrue(intake.idleCommand());
+    
   
   }
 
