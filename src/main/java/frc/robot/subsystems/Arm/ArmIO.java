@@ -16,6 +16,15 @@ public interface ArmIO {
                 public double cancoderVelocity;
                 public double armRotorPos;
                 public double armFollowerRotorPos;
+
+                public double SupplyCurrentAmpsLeader = 0.0;
+                public double SupplyCurrentAmpsFollower = 0.0;
+
+                public double TorqueCurrentAmpsLeader = 0.0;
+                public double TorqueCurrentAmpsFollower = 0.0;
+
+                public double TempCelsiusLeader = 0.0;
+                public double TempCelsiusFollower = 0.0;
               }
 
         /** Update stats */

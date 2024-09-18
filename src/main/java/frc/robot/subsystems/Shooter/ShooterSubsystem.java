@@ -15,7 +15,7 @@ import frc.robot.subsystems.Shooter.ShooterIO.ShooterIOStats;
 public class ShooterSubsystem extends SubsystemBase {
   private final ShooterIO io;
   private final ShooterIOStats stats = new ShooterIOStats();
-  private final ShuffleboardTab intakeShuffleboard;
+  private final ShuffleboardTab shooterShuffleboard;
 
   /* Shuffleboard entrys */
   private GenericEntry appliedVoltsLeft;
@@ -58,25 +58,25 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem(ShooterIO io) {
     this.io = io; 
 
-    this.intakeShuffleboard = Shuffleboard.getTab("Shooter");
+    this.shooterShuffleboard = Shuffleboard.getTab("Shooter");
 
-    appliedVoltsLeft = this.intakeShuffleboard.add("Shooter Left Volts", 0.0).getEntry();
-    velocityRpmLeft = this.intakeShuffleboard.add("Shooter RPM Left", 0.0).getEntry();
-    positionLeft = this.intakeShuffleboard.add("Shooter Pos Left", 0.0).getEntry();
-    supplyCurrentLeft = this.intakeShuffleboard.add("Shooter Supply Current Left", 0.0).getEntry();
-    statorCurrentLeft = this.intakeShuffleboard.add("Shooter Stator Current Left", 0.0).getEntry();
-    tempLeft = this.intakeShuffleboard.add("Shooter Temp Left", 0.0).getEntry();
-
-
-    appliedVoltsRight = this.intakeShuffleboard.add("Shooter Right Volts", 0.0).getEntry();
-    velocityRpmRight = this.intakeShuffleboard.add("Shooter RPM Right", 0.0).getEntry();
-    positionRight = this.intakeShuffleboard.add("Shooter Pos Right", 0.0).getEntry();
-    supplyCurrentRight = this.intakeShuffleboard.add("Shooter Supply Current Right", 0.0).getEntry();
-    statorCurrentRight = this.intakeShuffleboard.add("Shooter Stator Current Right", 0.0).getEntry();
-    tempRight = this.intakeShuffleboard.add("Shooter Temp Right", 0.0).getEntry();
+    appliedVoltsLeft = this.shooterShuffleboard.add("Shooter Left Volts", 0.0).getEntry();
+    velocityRpmLeft = this.shooterShuffleboard.add("Shooter RPM Left", 0.0).getEntry();
+    positionLeft = this.shooterShuffleboard.add("Shooter Pos Left", 0.0).getEntry();
+    supplyCurrentLeft = this.shooterShuffleboard.add("Shooter Supply Current Left", 0.0).getEntry();
+    statorCurrentLeft = this.shooterShuffleboard.add("Shooter Stator Current Left", 0.0).getEntry();
+    tempLeft = this.shooterShuffleboard.add("Shooter Temp Left", 0.0).getEntry();
 
 
-    stateName = this.intakeShuffleboard.add("Shooter State", this.currentState.name()).getEntry();
+    appliedVoltsRight = this.shooterShuffleboard.add("Shooter Right Volts", 0.0).getEntry();
+    velocityRpmRight = this.shooterShuffleboard.add("Shooter RPM Right", 0.0).getEntry();
+    positionRight = this.shooterShuffleboard.add("Shooter Pos Right", 0.0).getEntry();
+    supplyCurrentRight = this.shooterShuffleboard.add("Shooter Supply Current Right", 0.0).getEntry();
+    statorCurrentRight = this.shooterShuffleboard.add("Shooter Stator Current Right", 0.0).getEntry();
+    tempRight = this.shooterShuffleboard.add("Shooter Temp Right", 0.0).getEntry();
+
+
+    stateName = this.shooterShuffleboard.add("Shooter State", this.currentState.name()).getEntry();
   }
 
   public Command shootCommand() {
