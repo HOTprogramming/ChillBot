@@ -70,22 +70,25 @@ public class RobotContainer {
           {
             drivetrain.teleopDrive(
               Math.abs(driver.getLeftY()) >= 0.1 ? -driver.getLeftY() : 0, 
-              Math.abs(driver.getLeftX()) >= 0.1 ? -driver.getLeftX() : 0, 
+              Math.abs(driver.getLeftX()) >= 0.1 ? driver.getLeftX() : 0, 
               Math.abs(driver.getRightX()) >= 0.15 ? -driver.getRightX() : 0);
           }
       ));
 
-    driver.y().whileTrue(feeder.shoot()).whileFalse(feeder.idleCommand());
-    driver.a().whileTrue(Commands.parallel(intake.intakeCommand(), feeder.FeederCommand())).whileFalse(Commands.parallel(intake.idleCommand(), feeder.idleCommand()));
-    driver.b().whileTrue(intake.ejectCommand()).whileFalse(intake.idleCommand());
+    driver.rightTrigger().whileTrue(feeder.shoot()).whileFalse(feeder.idleCommand());
+
     driver.x().whileTrue(intake.idleCommand());
+    driver.start().whileTrue(drivetrain.resetPidgeon());
     
     /* Operator Controller*/
     operator.b().whileTrue(Commands.parallel(m_armSubsystem.protectCommand(), m_shooterSubsystem.shootCommand()));
     operator.y().whileTrue(Commands.parallel(m_armSubsystem.batterCommand(), m_shooterSubsystem.shootCommand()));
     operator.a().whileTrue(Commands.parallel(m_armSubsystem.zeroCommand(), m_shooterSubsystem.idleCommand()));
     operator.leftBumper().whileTrue(Commands.parallel(m_armSubsystem.ampCommand(), m_shooterSubsystem.ampCommand()));
-    operator.x().whileTrue(m_shooterSubsystem.setPID());
+    // operator.x().whileTrue(m_shooterSubsystem.setPID());
+
+    operator.leftTrigger().whileTrue(Commands.parallel(intake.intakeCommand(), feeder.FeederCommand())).whileFalse(Commands.parallel(intake.idleCommand(), feeder.idleCommand()));
+    operator.rightTrigger().whileTrue(intake.ejectCommand()).whileFalse(intake.idleCommand());
 
   }
 

@@ -21,7 +21,7 @@ public class FeederConstants {
     public static final double targetRPMEject = 1800;
 
     // feeder kp of 2 kS of 3.5 current limits of 40 on everyhting
-    public static final double ringAdvance = 6.0;
+    public static final double ringAdvance = 5.3;
 
 
     public static final double rollerRatio = (1 / 1);

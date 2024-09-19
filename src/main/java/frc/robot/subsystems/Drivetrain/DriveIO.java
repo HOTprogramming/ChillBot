@@ -52,4 +52,6 @@ public interface DriveIO {
     }
 
     default void setTeamRotation(DriverStation.Alliance alliance) {}
+
+    default void resetPidgeon() {}
 }
