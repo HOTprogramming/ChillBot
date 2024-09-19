@@ -33,8 +33,8 @@ public class DriveConstants {
         .withSupplyTimeThreshold(0.0);
 
     static TorqueCurrentConfigs DRIVE_TORQUE_CONFIGS = new TorqueCurrentConfigs()
-        .withPeakForwardTorqueCurrent(90)
-        .withPeakReverseTorqueCurrent(-90);
+        .withPeakForwardTorqueCurrent(75)
+        .withPeakReverseTorqueCurrent(-75);
 
     static TorqueCurrentConfigs AZIMUTH_TORQUE_CONFIGS = new TorqueCurrentConfigs()
         .withPeakForwardTorqueCurrent(50)

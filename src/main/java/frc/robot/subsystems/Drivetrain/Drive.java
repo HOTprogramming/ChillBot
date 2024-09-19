@@ -17,6 +17,9 @@ public class Drive extends SubsystemBase {
     private GenericEntry speedEntry;
     private GenericEntry poseEntry;
 
+    private boolean autoDriving;
+    private boolean autoDriveDirection; // true is blue
+
 
     public Drive(DriveIO driveIO) { 
         this.driveIO = driveIO;
@@ -33,6 +36,16 @@ public class Drive extends SubsystemBase {
             driveTheta <= 0 ? -(driveTheta * driveTheta) : (driveTheta * driveTheta));
     }
 
+    /**
+     * 
+     * @param direction true is blue
+     * @return
+     */
+    public Command autoDrive(boolean direction, boolean on) {
+        return runOnce(() -> {this.autoDriving = on;
+        this.autoDriveDirection = direction;});
+    }
+
     @Override
     public void periodic() {
         this.iOdata = driveIO.update();
@@ -44,6 +57,9 @@ public class Drive extends SubsystemBase {
                 this.iOdata.pose.getRotation().getDegrees()});
         } 
         
+        if (this.autoDriving) {
+            teleopDrive(this.autoDriveDirection ? -0.66 : 0.33, 0, 0);
+        }
     }
 
     public Command resetPidgeon() {
