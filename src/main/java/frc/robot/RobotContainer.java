@@ -70,7 +70,7 @@ public class RobotContainer {
           {
             drivetrain.teleopDrive(
               Math.abs(driver.getLeftY()) >= 0.1 ? -driver.getLeftY() : 0, 
-              Math.abs(driver.getLeftX()) >= 0.1 ? driver.getLeftX() : 0, 
+              Math.abs(driver.getLeftX()) >= 0.1 ? -driver.getLeftX() : 0, 
               Math.abs(driver.getRightX()) >= 0.15 ? -driver.getRightX() : 0);
           }
       ));
@@ -87,6 +87,23 @@ public class RobotContainer {
     operator.leftBumper().whileTrue(Commands.parallel(m_armSubsystem.ampCommand(), m_shooterSubsystem.ampCommand()));
     // operator.x().whileTrue(m_shooterSubsystem.setPID());
 
+
+    /*
+    driver.a().whileTrue((Commands.sequence(
+      m_shooterSubsystem.shootCommand(), 
+      m_armSubsystem.batterCommand(), 
+      Commands.waitSeconds(2), 
+      feeder.shoot(), 
+      Commands.waitSeconds(.5),
+      feeder.idleCommand(),
+      m_armSubsystem.zeroCommand(),
+      m_shooterSubsystem.idleCommand(),
+      drivetrain.autoDrive(true, true),
+      Commands.waitSeconds(1),
+      drivetrain.autoDrive(true, false)))).whileFalse(drivetrain.autoDrive(false, false));
+     */
+
+     
     operator.leftTrigger().whileTrue(Commands.parallel(intake.intakeCommand(), feeder.FeederCommand())).whileFalse(Commands.parallel(intake.idleCommand(), feeder.idleCommand()));
     operator.rightTrigger().whileTrue(intake.ejectCommand()).whileFalse(intake.idleCommand());
 
