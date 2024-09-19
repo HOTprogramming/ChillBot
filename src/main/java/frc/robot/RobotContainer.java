@@ -70,7 +70,7 @@ public class RobotContainer {
           {
             drivetrain.teleopDrive(
               Math.abs(driver.getLeftY()) >= 0.1 ? -driver.getLeftY() : 0, 
-              Math.abs(driver.getLeftX()) >= 0.1 ? -driver.getLeftX() : 0, 
+              Math.abs(driver.getLeftX()) >= 0.1 ? driver.getLeftX() : 0, 
               Math.abs(driver.getRightX()) >= 0.15 ? -driver.getRightX() : 0);
           }
       ));

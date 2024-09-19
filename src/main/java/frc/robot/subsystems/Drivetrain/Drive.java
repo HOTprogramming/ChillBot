@@ -27,7 +27,10 @@ public class Drive extends SubsystemBase {
     }
 
     public void teleopDrive(double driveX, double driveY, double driveTheta)  {
-        driveIO.percentDrive(driveX, driveY, driveTheta);
+        driveIO.percentDrive(
+            driveX <= 0 ? -(driveX * driveX) : (driveX * driveX),
+            driveY <= 0 ? -(driveY * driveY) : (driveY * driveY),
+            driveTheta <= 0 ? -(driveTheta * driveTheta) : (driveTheta * driveTheta));
     }
 
     @Override
