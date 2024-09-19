@@ -4,6 +4,7 @@ import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Drivetrain.DriveIO.DriveIOdata;
@@ -40,6 +41,10 @@ public class Drive extends SubsystemBase {
                 this.iOdata.pose.getRotation().getDegrees()});
         } 
         
+    }
+
+    public Command resetPidgeon() {
+        return runOnce(() -> {driveIO.resetPidgeon();});
     }
 
     public void init() {

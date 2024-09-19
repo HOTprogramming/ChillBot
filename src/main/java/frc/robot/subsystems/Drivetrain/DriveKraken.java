@@ -93,4 +93,9 @@ public class DriveKraken extends SwerveDrivetrain implements DriveIO {
             this.setOperatorPerspectiveForward(BlueAlliancePerspectiveRotation);
         }
     }
+
+    @Override
+    public void resetPidgeon() {
+        m_pigeon2.setYaw(0);
+    }
 }
