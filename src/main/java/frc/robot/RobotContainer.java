@@ -88,20 +88,20 @@ public class RobotContainer {
     // operator.x().whileTrue(m_shooterSubsystem.setPID());
 
 
-    /*
-    driver.a().whileTrue((Commands.sequence(
-      m_shooterSubsystem.shootCommand(), 
-      m_armSubsystem.batterCommand(), 
-      Commands.waitSeconds(2), 
-      feeder.shoot(), 
-      Commands.waitSeconds(.5),
-      feeder.idleCommand(),
-      m_armSubsystem.zeroCommand(),
-      m_shooterSubsystem.idleCommand(),
-      drivetrain.autoDrive(true, true),
-      Commands.waitSeconds(1),
-      drivetrain.autoDrive(true, false)))).whileFalse(drivetrain.autoDrive(false, false));
-     */
+    
+    // driver.a().whileTrue((Commands.sequence(
+    //   m_shooterSubsystem.shootCommand(), 
+    //   m_armSubsystem.batterCommand(), 
+    //   Commands.waitSeconds(2), 
+    //   feeder.shoot(), 
+    //   Commands.waitSeconds(.5),
+    //   feeder.idleCommand(),
+    //   m_armSubsystem.zeroCommand(),
+    //   m_shooterSubsystem.idleCommand(),
+    //   drivetrain.autoDrive(true, true),
+    //   Commands.waitSeconds(1),
+    //   drivetrain.autoDrive(true, false)))).whileFalse(drivetrain.autoDrive(false, false));
+     
 
      
     operator.leftTrigger().whileTrue(Commands.parallel(intake.intakeCommand(), feeder.FeederCommand())).whileFalse(Commands.parallel(intake.idleCommand(), feeder.idleCommand()));
@@ -110,6 +110,16 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    return Commands.sequence(
+      Commands.parallel(m_shooterSubsystem.shootCommand(), m_armSubsystem.batterCommand()), 
+      Commands.waitSeconds(2), 
+      feeder.shoot(), 
+      Commands.waitSeconds(.5),
+      feeder.idleCommand(),
+      m_armSubsystem.zeroCommand(),
+      m_shooterSubsystem.idleCommand());
+      // drivetrain.autoDrive(true, true),
+      // Commands.waitSeconds(1),
+      // drivetrain.autoDrive(true, false));
   }
 }

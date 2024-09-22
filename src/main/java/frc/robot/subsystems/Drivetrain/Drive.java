@@ -67,10 +67,8 @@ public class Drive extends SubsystemBase {
     }
 
     public void init() {
-        driveIO.setTeamRotation(DriverStation.getAlliance().get());
     }
 
     public void setTeamRotation() {
-        driveIO.setTeamRotation(DriverStation.getAlliance().get());
     }
 }

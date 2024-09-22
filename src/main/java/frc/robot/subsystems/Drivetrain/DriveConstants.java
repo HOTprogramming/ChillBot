@@ -17,11 +17,11 @@ import frc.robot.Constants;
 
 public class DriveConstants {
     static CurrentLimitsConfigs DRIVE_CURRENT_LIMITS = new CurrentLimitsConfigs()
-        .withStatorCurrentLimit(90)
+        .withStatorCurrentLimit(80)
         .withStatorCurrentLimitEnable(true)
-        .withSupplyCurrentLimit(100)
+        .withSupplyCurrentLimit(90)
         .withSupplyCurrentLimitEnable(true)
-        .withSupplyCurrentThreshold(100)
+        .withSupplyCurrentThreshold(90)
         .withSupplyTimeThreshold(0.0);
 
     static CurrentLimitsConfigs AZIMUTH_CURRENT_LIMITS = new CurrentLimitsConfigs()
@@ -33,8 +33,8 @@ public class DriveConstants {
         .withSupplyTimeThreshold(0.0);
 
     static TorqueCurrentConfigs DRIVE_TORQUE_CONFIGS = new TorqueCurrentConfigs()
-        .withPeakForwardTorqueCurrent(75)
-        .withPeakReverseTorqueCurrent(-75);
+        .withPeakForwardTorqueCurrent(65)
+        .withPeakReverseTorqueCurrent(-65);
 
     static TorqueCurrentConfigs AZIMUTH_TORQUE_CONFIGS = new TorqueCurrentConfigs()
         .withPeakForwardTorqueCurrent(50)

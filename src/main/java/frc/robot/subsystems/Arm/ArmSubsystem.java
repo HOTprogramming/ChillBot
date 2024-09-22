@@ -44,7 +44,7 @@ public class ArmSubsystem extends SubsystemBase {
   //lowest value is 0.984, highest value is 1.17
   private static final double ZERO_POS = 1.0;
   private static final double BATTER_POS = 1.05;
-  private static final double PROTECTED_POS = 1.0045;
+  private static final double PROTECTED_POS = 1.00045;
   private static final double AMP_POS = 1.181;
 
   public enum State {
